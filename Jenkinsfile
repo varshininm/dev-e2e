@@ -19,6 +19,17 @@ pipeline {
                 git branch: 'master', credentialsId: 'github', url: 'https://github.com/varshininm/dev-e2e.git'
             }
         }
+
+        stage("Build the code"){
+            steps {
+                sh "mvn clean package"
+            }
+        }
+        stage("Test the code"){
+            steps {
+                sh "mvn test"
+            }
+        }
     }
 
 }
