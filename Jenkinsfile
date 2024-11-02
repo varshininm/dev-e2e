@@ -43,21 +43,21 @@ pipeline {
         }
 
 
-        stage("Build and Push the docker image"){
-            steps {
-                script{
-                    withDockerRegistry('', DOCKER_PASS){
-                        docker_image = docker.build"${IMAGE_NAME}"
+        // stage("Build and Push the docker image"){
+        //     steps {
+        //         script{
+        //             withDockerRegistry('', DOCKER_PASS){
+        //                 docker_image = docker.build"${IMAGE_NAME}"
 
-                    }
-                    withDockerRegistry('', DOCKER_PASS){
-                        docker_image.push("${IMAGE_TAG}")
-                        docker_image.push('latest')
-                    }
-                }
+        //             }
+        //             withDockerRegistry('', DOCKER_PASS){
+        //                 docker_image.push("${IMAGE_TAG}")
+        //                 docker_image.push('latest')
+        //             }
+        //         }
                 
-            }
-        }
+        //     }
+        // }
 
         
         stage("Build and Push the docker image to JFrog"){
