@@ -12,9 +12,10 @@ pipeline {
         RELEASE = "1.0.0"
         DOCKER_USER = "varshininm"
         DOCKER_PASS = "dockerhub"
-        ARTIFACTORY_REGISTRY = "https://varshininm1012.jfrog.io/artifactory/api/docker/docker-local"
+        ARTIFACTORY_REGISTRY = "https://varshininm1012.jfrog.io/docker-local"
 
-        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+
+        IMAGE_NAME = "${ARTIFACTORY_REGISTRY}/${DOCKER_USER}/${APP_NAME}"
         IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
 
     }
