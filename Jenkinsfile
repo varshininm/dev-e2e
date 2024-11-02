@@ -7,6 +7,17 @@ pipeline {
         maven 'Maven3'
         
     }
+    environment {
+        APP_NAME = "complete-dev-e2e"
+        RELEASE = "1.0.0"
+        DOCKER_USER = "varshininm"
+        DOCKER_PASS = "dockerhub"
+        ARTIFACTORY_REGISTRY = "https://varshininm1012.jfrog.io/artifactory/api/docker/docker-local"
+
+        IMAGE_NAME = "${DOCKER_USER}" + "/" + "${APP_NAME}"
+        IMAGE_TAG = "${RELEASE}-${BUILD_NUMBER}"
+
+    }
     stages{
         stage("Clean the workspace"){
             steps {
@@ -30,6 +41,58 @@ pipeline {
                 sh "mvn test"
             }
         }
+
+
+        stage("Build and Push the docker image"){
+            steps {
+                script{
+                    withDockerRegistry('', DOCKER_PASS){
+                        docker_image = docker.build"${IMAGE_NAME}"
+
+                    }
+                    withDockerRegistry('', DOCKER_PASS){
+                        docker_image.push("${IMAGE_TAG}")
+                        docker_image.push('latest')
+                    }
+                }
+                
+            }
+        }
+
+        
+        stage("Build and Push the docker image to JFrog"){
+            steps {
+                script{
+                    withDockerRegistry(credentialsId: 'JFROG_CREDENTIALS_ID', url: "${ARTIFACTORY_REGISTRY}"){
+                        docker_image = docker.build("${IMAGE_NAME}")
+                        docker_image.push("${IMAGE_TAG}")
+
+                    }
+                   
+                }
+                
+            }
+        }
+
+        // stage("SonarQube Analysis"){
+        //     steps {
+        //         withSonarQubeEnv(credentialsId: 'jenkins-sonarqube-token'){
+        //             sh "mvn sonar:sonar"
+
+        //         }
+                
+        //     }
+        // // }
+        // stage("SonarQube Analysis"){
+        //     steps {
+        //         waitForQualityGate(abortPipeline: false ,  credentialsId: 'jenkins-sonarqube-token')
+
+
+
+
+        //        }
+                
+        //     }
+        }
     }
 
-}
