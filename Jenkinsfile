@@ -12,7 +12,7 @@ pipeline {
         RELEASE = "1.0.0"
         DOCKER_USER = "varshininm"
         DOCKER_PASS = "dockerhub"
-        ARTIFACTORY_REGISTRY = "https://varshininm1012.jfrog.io/docker-local"
+        ARTIFACTORY_REGISTRY = "varshininm1012.jfrog.io/docker-local"
 
 
         IMAGE_NAME = "${ARTIFACTORY_REGISTRY}/${DOCKER_USER}/${APP_NAME}"
@@ -64,8 +64,8 @@ pipeline {
         stage("Build and Push the docker image to JFrog"){
             steps {
                 script{
-                    withDockerRegistry(credentialsId: 'JFROG_CREDENTIALS_ID', url: "${ARTIFACTORY_REGISTRY}"){
-                        docker_image = docker.build("${IMAGE_NAME}")
+                    withDockerRegistry(credentialsId: 'JFROG_CREDENTIALS_ID', url: "https://${ARTIFACTORY_REGISTRY}"){
+                        docker_image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")
                         docker_image.push("${IMAGE_TAG}")
 
                     }
